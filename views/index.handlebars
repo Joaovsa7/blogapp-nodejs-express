@@ -1,0 +1,30 @@
+<div class="jumbotron">
+  <h1 class="display-4">Bem vindo ao blog feito em node e handlebars!</h1>
+  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+  <hr class="my-4">
+  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+  <a class="btn btn-primary btn-lg" href="#" role="button">Crie uma conta</a>
+</div>
+
+<hr>
+
+<h2>
+    Postagens Recentes
+</h2>
+
+{{#each postagem}}
+    <div class="card mt-4">
+        <div class="card-body">
+                <h4>{{titulo}}</h4>
+                <p>Descrição: {{descricao}}</p>
+                <small>Data: {{data}}</small>
+                <small>Categoria: {{categoria.nome}}</small><br>
+                <a href="/postagem/{{slug}}">
+                    <button class="btn btn-success"> Leia mais </button>
+                </a>
+        </div>
+        <hr>
+    {{else}}
+    <p> Nenhuma postagem foi registrada </p>
+{{/each}}
+

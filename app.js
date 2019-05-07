@@ -8,6 +8,10 @@ const admin = require("./routes/admin")
 const path = require("path")
 const session = require('express-session')
 const flash = require('connect-flash')
+
+//model de postagens
+require('./models/Postagem')
+const Postagem = mongoose.model('postagens')
 // const mongoose = require("mongoose")
 
 // Configurações
@@ -51,12 +55,39 @@ const flash = require('connect-flash')
         })
 // Rotas
     app.get('/', (req, res) => {
-        res.send('Página principal')
+        Postagem.find().populate("categoria")
+        .sort({ data: "desc"}).then((postagem) => {
+            res.render("index", { postagem: postagem })
+        })
+        .catch((err) => {
+            console.log(err)
+            req.flash("error_msg", "Ocorreu um erro no loading das postagens")
+            res.redirect('/404')
+        })
+    })
+    app.get('/404', ( req , res) => {
+        res.send('erro 404')
+        setTimeout(() => {
+            res.redirect('/')
+        }, 3000);
+    })
+    app.get('/postagem/:slug', (req, res) => {
+        Postagem.findOne({ slug: req.params.slug })
+        .then((postagem) => {
+            if(postagem){
+                res.render("postagens/index", { postagem: postagem })
+            }
+            else {
+                req.flash("error_msg", "Ocorreu um erro interno")
+                res.redirect('/')
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.redirect('/')
+        })
     })
 
-    app.get('/posts', (req, res) => {
-        res.send('Lista de postagens')
-    })
 
     app.use('/admin', admin)
 
